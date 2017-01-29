@@ -5,7 +5,8 @@ reversi
 
 ## details
  - python 2.7
- - run with `make run`
+ - run with `make run` or `python runner.py`
+ - specify agents with `--player1/player2 rng/minmax/alphabeta`
 
 ## info
 A game of reversi with agents that play the game.
