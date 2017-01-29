@@ -7,7 +7,7 @@ class Player:
 	def __init__(self):
 		self.name = random.choice(Player.names)
 
-	def make_move(self, game):
+	def next_move(self, game):
 		abstract
 
 class RandomPlayer(Player):
