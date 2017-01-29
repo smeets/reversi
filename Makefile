@@ -1,2 +1,2 @@
-run: reversi.py runner.py player.py
+run:
 	python runner.py
