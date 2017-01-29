@@ -9,6 +9,7 @@ def play_game(game, agents):
     while True:
         passes = 0
         for agent in agents:
+            # Press key to continue...
             move = agent.next_move(game, state)
             state = game.make_move(state, move)
             moves.append(move)
@@ -28,6 +29,7 @@ def str_to_agent(name):
 parser = argparse.ArgumentParser(description="Play some Reversi.")
 parser.add_argument("--player1", choices=['rng', 'minmax', 'alphabeta'], help="specify player 1's agent")
 parser.add_argument("--player2", choices=['rng', 'minmax', 'alphabeta'], help="specify player 2's agent")
+# add --interactive option to step through each turn
 args = parser.parse_args()
 
 game = Reversi()
