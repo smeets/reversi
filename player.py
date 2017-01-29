@@ -7,20 +7,20 @@ class Player:
 	def __init__(self):
 		self.name = random.choice(Player.names)
 
-	def next_move(self, game):
+	def next_move(self, game, state):
 		abstract
 
 class RandomPlayer(Player):
 
-	def next_move(self, game):
-		return random.choice(game.legal_moves())
+	def next_move(self, game, state):
+		return random.choice(game.legal_moves(state))
 
 class MinMaxPlayer(Player):
 
-	def next_move(self, game):
-		return "1A"
+	def next_move(self, game, state):
+		return (1, 1)
 
 class AlphaBetaPlayer(Player):
 
-	def next_move(self, game):
-		return "1A"
+	def next_move(self, game, state):
+		return (1, 1)
