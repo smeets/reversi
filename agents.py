@@ -1,26 +1,27 @@
 import random
 
-class Player:
+class Agent:
 
 	names = ["Max", "Oscar", "Bob", "Charles"]
 
 	def __init__(self):
-		self.name = random.choice(Player.names)
+		self.name = random.choice(Agent.names)
 
 	def next_move(self, game, state):
 		abstract
 
-class RandomPlayer(Player):
+class RandomAgent(Agent):
 
 	def next_move(self, game, state):
-		return random.choice(game.legal_moves(state))
+		moves = game.legal_moves(state)
+		return "pass" if not moves else random.choice(moves)
 
-class MinMaxPlayer(Player):
+class MinMaxAgent(Agent):
 
 	def next_move(self, game, state):
 		return (1, 1)
 
-class AlphaBetaPlayer(Player):
+class AlphaBetaAgent(Agent):
 
 	def next_move(self, game, state):
 		return (1, 1)

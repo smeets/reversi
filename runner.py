@@ -1,22 +1,28 @@
-from reversi import Reversi
-from player import *
+from reversi import Reversi, move_repr, BLACK, WHITE
+from agents import RandomAgent
 
-def play_game(game, players):
+def play_game(game, agents):
 	moves = []
 	state = game.initial_state()
 	while True:
-		for player in players:
-			move = player.next_move(game, state)
-			moves.append(move)
+		passes = 0
+		for agent in agents:
+			move = agent.next_move(game, state)
 			state = game.make_move(state, move)
+			moves.append(move)
 			if game.over(state):
-				return player, state, moves
+				passes += 1
+		if passes == len(agents):
+			return state, moves
 
 game = Reversi()
-players = [RandomPlayer(), RandomPlayer()]
+agents = [RandomAgent(), RandomAgent()]
 
-winner, state, moves = play_game(game, players)
+state, moves = play_game(game, agents)
+winner, score = game.top_scoring_player(state)
 
-print "Winner is", winner.name
-print "Move list", moves
-game.display(state)
+#for move in moves:
+#	print move_repr(move)
+
+game.print_board(state)
+print "Winner is", winner, "at turn", state["turn"], "with", score, "score!"
