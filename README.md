@@ -6,3 +6,10 @@ reversi
 ## details
  - python 2.7
  - run with `make run`
+
+## info
+A game of reversi with agents that play the game.
+
+ - [ ] Min-Max agent
+ - [ ] Alpha-Beta pruning agent
+ - [x] Random agent
