@@ -2,11 +2,6 @@ import random
 
 class Agent:
 
-    names = ["Max", "Oscar", "Bob", "Charles"]
-
-    def __init__(self):
-        self.name = random.choice(Agent.names)
-
     def next_move(self, game, state):
         abstract
 
