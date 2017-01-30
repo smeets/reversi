@@ -25,63 +25,57 @@ class MinMaxAgent(Agent):
         # propagate min-max values upwards so that we finally
         # can select the best move.
         
+        self.player = state["player"]
         moves = game.legal_moves(state);
         if not moves:
             return "pass"
         else:
-            depth = 6
+            depth = 4
             values = dict()
             for move in moves:
                 temp_state = game.make_move(state, move)
-                value = min_val(self, game, temp_state, depth)
+                value = self.min_val(game, temp_state, depth)
                 values[move] = value
             return max(values, key=values.get)
         
 
     def max_val(self, game, state, depth):
         if depth == 0:
-            return heuristics()
+            return self.heuristics(game, state)
         else:
             moves = game.legal_moves(state);
             if not moves:
-                #We hit terminus
-                #Return something
-                #Win / loose
-                #Or score?
-                return 0;
+                return self.heuristics(game, state)
             else:
                 depth -= 1
                 values = dict()
                 for move in moves:
                     temp_state = game.make_move(state, move)
-                    value = min_val(self, game, temp_state, depth)
+                    value = self.min_val(game, temp_state, depth)
                     values[move] = value
                 return values[max(values, key=values.get)]
 
 
     def min_val(self, game, state, depth):
         if depth == 0:
-            return heuristics()
+            return self.heuristics(game, state)
         else:
             moves = game.legal_moves(state);
             if not moves:
-                #We hit terminus
-                #Return something
-                #Win / loose
-                #Or score?
-                return 0;
+                return self.heuristics(game, state)
             else:
                 depth -= 1
                 values = dict()
                 for move in moves:
                     temp_state = game.make_move(state, move)
-                    value = max_val(self, game, temp_state, depth)
+                    value = self.max_val(game, temp_state, depth)
                     values[move] = value
                 return values[min(values, key=values.get)]
 
     def heuristics(self, game, state):
-        #return some kind of integer value
-        return 0
+        """ Returns number of marks for the agent
+        """
+        return game.score_player(state, self.player)
 
 
 class AlphaBetaAgent(Agent):
