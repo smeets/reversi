@@ -48,6 +48,7 @@ class MinMaxAgent(Agent):
                 #Return something
                 #Win / loose
                 #Or score?
+                return 0;
             else 
                 depth -= 1
                 values = dict()
