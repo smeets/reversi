@@ -26,9 +26,9 @@ class MinMaxAgent(Agent):
         # can select the best move.
         
         moves = game.legal_moves(state);
-        if not moves
+        if not moves:
             return "pass"
-        else
+        else:
             depth = 6
             values = dict()
             for move in moves:
@@ -39,17 +39,17 @@ class MinMaxAgent(Agent):
         
 
     def max_val(self, game, state, depth):
-        if depth = 0
+        if depth == 0:
             return heuristics()
-        else
+        else:
             moves = game.legal_moves(state);
-            if not moves
+            if not moves:
                 #We hit terminus
                 #Return something
                 #Win / loose
                 #Or score?
                 return 0;
-            else 
+            else:
                 depth -= 1
                 values = dict()
                 for move in moves:
@@ -60,17 +60,17 @@ class MinMaxAgent(Agent):
 
 
     def min_val(self, game, state, depth):
-        if depth = 0
+        if depth == 0:
             return heuristics()
-        else
+        else:
             moves = game.legal_moves(state);
-            if not moves
+            if not moves:
                 #We hit terminus
                 #Return something
                 #Win / loose
                 #Or score?
                 return 0;
-            else 
+            else:
                 depth -= 1
                 values = dict()
                 for move in moves:
