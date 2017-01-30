@@ -1,5 +1,4 @@
 import random
-import sys
 
 class Agent:
 
@@ -86,9 +85,9 @@ class AlphaBetaAgent(Agent):
         # inequalities so that we can prune states that
         # fail, or something...
 
-        v = -sys.maxint - 1
-        a = -sys.maxint - 1
-        b = sys.maxint
+        v = -100000
+        a = -100000
+        b = 100000
 
         self.player = state["player"]
         moves = game.legal_moves(state);
@@ -113,7 +112,7 @@ class AlphaBetaAgent(Agent):
                 return self.heuristics(game, state)
             else:
                 depth -= 1
-                best_value = -sys.maxint - 1
+                best_value = -100000
                 for move in moves:
                     temp_state = game.make_move(state, move)
                     value = self.min_val(game, temp_state, depth, a, b)
@@ -135,7 +134,7 @@ class AlphaBetaAgent(Agent):
                 return self.heuristics(game, state)
             else:
                 depth -= 1
-                best_value = sys.maxint
+                best_value = 100000
                 for move in moves:
                     temp_state = game.make_move(state, move)
                     value = self.max_val(game, temp_state, depth, a, b)
