@@ -84,4 +84,69 @@ class AlphaBetaAgent(Agent):
         # Very similar to minmax but do some magic with
         # inequalities so that we can prune states that
         # fail, or something...
-        return (1, 1)
+
+        v = -sys.maxint - 1
+        a = -sys.maxint - 1
+        b = sys.maxint
+
+        self.player = state["player"]
+        moves = game.legal_moves(state);
+        if not moves:
+            return "pass"
+        else:
+            depth = 4
+            values = dict()
+            for move in moves:
+                temp_state = game.make_move(state, move)
+                value = self.min_val(game, temp_state, depth, a, b)
+                values[move] = value
+            return max(values, key=values.get)
+        
+
+    def max_val(self, game, state, depth, a, b):
+        if depth == 0:
+            return self.heuristics(game, state)
+        else:
+            moves = game.legal_moves(state);
+            if not moves:
+                return self.heuristics(game, state)
+            else:
+                depth -= 1
+                best_value = -sys.maxint - 1
+                for move in moves:
+                    temp_state = game.make_move(state, move)
+                    value = self.min_val(game, temp_state, depth, a, b)
+                    if(value > best_value):
+                        best_value = value
+                    if(best_value >= b):
+                        return best_value
+                    if(best_value > a):
+                        a = best_value
+                return best_value
+
+
+    def min_val(self, game, state, depth, a, b):
+        if depth == 0:
+            return self.heuristics(game, state)
+        else:
+            moves = game.legal_moves(state);
+            if not moves:
+                return self.heuristics(game, state)
+            else:
+                depth -= 1
+                best_value = sys.maxint
+                for move in moves:
+                    temp_state = game.make_move(state, move)
+                    value = self.max_val(game, temp_state, depth, a, b)
+                    if(value < best_value):
+                        best_value = value
+                    if(best_value >= a):
+                        return best_value
+                    if(best_value > b):
+                        b = best_value
+                return best_value
+
+    def heuristics(self, game, state):
+        """ Returns number of marks for the agent
+        """
+        return game.score_player(state, self.player)

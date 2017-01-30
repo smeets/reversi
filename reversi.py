@@ -17,6 +17,9 @@ def move_repr(move):
 def opponent(state):
     return BLACK if state["player"] == WHITE else WHITE
 
+def opponent_player(player):
+    return BLACK if player == WHITE else WHITE
+
 def mark_line(board, player, src, dir, end):
     """ Change ownership of markers from src to end.
     """
@@ -132,11 +135,6 @@ class Reversi:
         """
         return not self.legal_moves(state)
 
-    def score_player(self, state, player):
-        """ Score(Player) = Sum(Markers for Player)
-        """
-        own = lambda mark: mark == player
-        return len(list(filter(own, state["board"])))
 
     def top_scoring_player(self, state):
         black = self.score_player(state, BLACK)
@@ -165,3 +163,32 @@ class Reversi:
 
         for y in range(self.h):
             print_row(y)
+
+    
+    def score_player(self, state, player):
+        """ Score(Player) = Sum(Markers for Player)
+        """
+        own = lambda mark: mark == player
+        return len(list(filter(own, state["board"])))
+    
+    ## Idea of heuristic measuers is taken from 
+    ## https://courses.cs.washington.edu/courses/cse573/04au/Project/mini1/RUSSIA/Final_Paper.pdf
+    def actual_mobility(self, state, player):
+        return 0
+
+    def potential_mobility(self, state, player):
+        return 0
+
+    def coin_parity(self, state, player):
+        max_coin = score_player(self, state, player)
+        min_coin = score_player(self, state, opponent_player(player))
+        return 100*(max_coin - min_coin)/(max_coin + min_coin)
+
+    def stability(self, state, player):
+        return 0
+
+    def corners(self, state, player):
+        return 0
+
+
+
