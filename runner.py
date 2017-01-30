@@ -33,7 +33,7 @@ parser.add_argument("--player2", choices=['rng', 'minmax', 'alphabeta'], help="s
 args = parser.parse_args()
 
 game = Reversi()
-agents = map(str_to_agent, [args.player1, args.player2])
+agents = list(map(str_to_agent, [args.player1, args.player2]))
 
 state, moves = play_game(game, agents)
 winner, score = game.top_scoring_player(state)
@@ -42,4 +42,4 @@ winner, score = game.top_scoring_player(state)
 #   print move_repr(move)
 
 game.print_board(state)
-print "Winner is", winner, "at turn", state["turn"], "with", score, "score!"
+print("Winner is {} at turn {} with {} score!".format(winner, state["turn"], score))

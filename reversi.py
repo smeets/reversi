@@ -66,7 +66,7 @@ class Reversi:
     def initial_state(self):
         """ Black starts
         """
-        center = self.map_2d(self.w / 2, self.h / 2)
+        center = self.map_2d(int(self.w / 2), int(self.h / 2))
 
         board = [EMPTY] * self.w * self.h
         board[center], board[center + self.NW] = WHITE, WHITE
@@ -136,7 +136,7 @@ class Reversi:
         """ Score(Player) = Sum(Markers for Player)
         """
         own = lambda mark: mark == player
-        return len(filter(own, state["board"]))
+        return len(list(filter(own, state["board"])))
 
     def top_scoring_player(self, state):
         black = self.score_player(state, BLACK)
@@ -159,9 +159,9 @@ class Reversi:
         def print_row(y):
             begin = y * self.w
             end = begin + self.w
-            print str(y + 1), ' '.join(board[begin:end])
+            print('{} {}'.format(str(y + 1), ' '.join(board[begin:end])))
 
-        print " ", ' '.join(ascii_lowercase[0:self.w])
+        print("  {}".format(' '.join(ascii_lowercase[0:self.w])))
 
-        for y in xrange(self.h):
+        for y in range(self.h):
             print_row(y)
