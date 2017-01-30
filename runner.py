@@ -1,4 +1,5 @@
 import argparse
+import time
 
 from reversi import Reversi, move_repr, BLACK, WHITE
 from agents import *
@@ -10,8 +11,12 @@ def play_game(game, agents):
         passes = 0
         for agent in agents:
             # Press key to continue...
+            time1 = time.time()
             move = agent.next_move(game, state)
-            state = game.make_move(state, move)
+            time2 = time.time()
+            new_state = game.make_move(state, move)
+            print("Turn {} for player {} took {:0.3f} ms, {} score".format(state["turn"], state["player"], (time2-time1)*1000.0, game.score_player(new_state, state["player"])))
+            state = new_state
             moves.append(move)
             if game.over(state):
                 passes += 1
