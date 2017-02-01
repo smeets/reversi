@@ -11,6 +11,8 @@ reversi
 ## info
 A game of reversi with agents that play the game.
 
- - [ ] Min-Max agent
- - [ ] Alpha-Beta pruning agent
+ - [x] Min-Max agent
+ - [x] Alpha-Beta pruning agent
  - [x] Random agent
+ - [x] Timeout for agents
+ - [x] Strange heuristics
