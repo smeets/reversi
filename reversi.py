@@ -1,7 +1,8 @@
 from string import ascii_lowercase
+import time
 from operator import sub
 
-EMPTY, BLACK, WHITE = ' ', 'O', 'X'
+EMPTY, BLACK, WHITE, BORDER = ' ', 'O', 'X', '#'
 
 def move_repr(move):
     """ XY where X is row and Y is column, or PASS
@@ -16,9 +17,6 @@ def move_repr(move):
 
 def opponent(state):
     return BLACK if state["player"] == WHITE else WHITE
-
-def opponent_player(player):
-    return BLACK if player == WHITE else WHITE
 
 def mark_line(board, player, src, dir, end):
     """ Change ownership of markers from src to end.
@@ -36,16 +34,12 @@ def raycast(state, src, dir):
     board = state["board"]
     loc = src + dir
 
-    if loc >= len(board) or loc < 0:
-        return None
-
+    # Fail if surrounded by self
     if board[loc] == state["player"]:
         return None
 
     while board[loc] == opponent(state):
         loc += dir
-        if loc >= len(board) or loc < 0:
-            return None
 
     return loc if board[loc] == state["player"] else None
 
@@ -54,9 +48,11 @@ class Reversi:
     def __init__(self, h=8, w=8):
         self.h = h
         self.w = w
+        self.h_ = h + 3
+        self.w_ = w + 3
 
         # directions
-        self.N, self.S = -self.w, self.w
+        self.N, self.S = -self.w_, self.w_
         self.E, self.W = 1, -1
         self.NE = self.N + self.E
         self.NW = self.N + self.W
@@ -69,24 +65,28 @@ class Reversi:
     def initial_state(self):
         """ Black starts
         """
-        center = self.map_2d(int(self.w / 2), int(self.h / 2))
+        center = self.map_2d(int(self.w_ / 2), int(self.h_ / 2))
 
-        board = [EMPTY] * self.w * self.h
+        board = [BORDER if x % self.w_ == 0 and y % self.h_ == 0 else EMPTY
+                 for x in range(self.w_)
+                 for y in range(self.h_)]
+
         board[center], board[center + self.NW] = WHITE, WHITE
         board[center + self.W], board[center + self.N] = BLACK, BLACK
 
         return {"turn": 1, "player": BLACK, "board": board}
 
     def map_2d(self, x, y):
-        return y * self.w + x
+        return y * self.w_ + x
 
     def to_grid(self, move):
         """ Convert from (1, 1) to grid[0]
         """
-        return self.map_2d(*tuple(map(sub, move, (1, 1))))
+        x,y = move
+        return self.map_2d(x, y)
 
     def is_legal_move(self, state, move):
-        """ Move is lega if player has marker in any
+        """ Move is legal if player has marker in any
             direction with at least one enemy cell in
             between.
         """
@@ -104,8 +104,8 @@ class Reversi:
     def legal_moves(self, state):
         """ Expensive but simple
         """
-        return [(x, y) for x in range(1, self.w + 1)
-                for y in range(1, self.h + 1)
+        return [(x, y) for x in range(1, self.w)
+                for y in range(1, self.h)
                 if self.is_legal_move(state, (x, y))]
 
     def make_move(self, state, move):
@@ -155,13 +155,13 @@ class Reversi:
         board = state["board"]
 
         def print_row(y):
-            begin = y * self.w
+            begin = y * (self.w_) + 1
             end = begin + self.w
-            print('{} {}'.format(str(y + 1), ' '.join(board[begin:end])))
+            print('{} {}'.format(str(y), ' '.join(board[begin:end])))
 
         print("  {}".format(' '.join(ascii_lowercase[0:self.w])))
 
-        for y in range(self.h):
+        for y in range(1, self.h+1):
             print_row(y)
 
     
@@ -171,24 +171,3 @@ class Reversi:
         own = lambda mark: mark == player
         return len(list(filter(own, state["board"])))
     
-    ## Idea of heuristic measuers is taken from 
-    ## https://courses.cs.washington.edu/courses/cse573/04au/Project/mini1/RUSSIA/Final_Paper.pdf
-    def actual_mobility(self, state, player):
-        return 0
-
-    def potential_mobility(self, state, player):
-        return 0
-
-    def coin_parity(self, state, player):
-        max_coin = score_player(self, state, player)
-        min_coin = score_player(self, state, opponent_player(player))
-        return 100*(max_coin - min_coin)/(max_coin + min_coin)
-
-    def stability(self, state, player):
-        return 0
-
-    def corners(self, state, player):
-        return 0
-
-
-
