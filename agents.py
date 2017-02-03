@@ -11,19 +11,9 @@ py3 = version_info[0] > 2
 
 def read_some_input(txt):
     if py3:
-        self_input = input(txt)
-        # first char is row and is a number, second is a letter a-something
-        row = int(self_input[0])
-        col = ascii_lowercase.index(self_input[1].lower()) + 1
-        move = (col,row)
-        return move
+        return input(txt)
     else:
-        self_input = raw_input(txt)
-        # first char is row and is a number, second is a letter a-something
-        row = int(self_input[0])
-        col = index(ascii_lowercase, self_input[1].lower()) + 1
-        move = (col,row)
-        return move
+        return raw_input(txt)
 
 class Agent:
 
@@ -54,7 +44,11 @@ class InteractiveAgent(Agent):
         """ Read 5d and convert to (5,4)
         """
         while True:
-            move = read_some_input('What is your move? ')
+            action = read_some_input('What is your move? \n')
+             # first char is row and is a number
+            row = int(action[0])
+            col = index(ascii_lowercase, action[1].lower()) + 1
+            move = (col,row)
             if game.is_legal_move(state, move):
                 return move
             else:
@@ -154,6 +148,7 @@ class AlphaBetaAgent(Agent):
         else:
             depth = 5
             best_value = -100000
+            best_move = None
             for move in moves:
                 if time.time() >= self.turn_time:
                     break
@@ -161,11 +156,10 @@ class AlphaBetaAgent(Agent):
                 value = self.min_val(game, temp_state, depth, a, b)
                 if(value > best_value):
                     best_value = value
-                if(best_value >= b):
-                    return best_value
+                    best_move = move
                 if(best_value > a):
                     a = best_value
-            return best_value
+            return best_move
         
 
     def max_val(self, game, state, depth, a, b):

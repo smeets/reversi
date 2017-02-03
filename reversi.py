@@ -1,6 +1,7 @@
 from string import ascii_lowercase
 import time
 from operator import sub
+import sys
 
 EMPTY, BLACK, WHITE, BORDER = ' ', 'O', 'X', '#'
 
@@ -163,6 +164,7 @@ class Reversi:
 
         for y in range(1, self.h+1):
             print_row(y)
+            sys.stdout.flush()
 
     
     def score_player(self, state, player):
