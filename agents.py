@@ -302,7 +302,54 @@ class AlphaBetaAgent(Agent):
         min_player_mobility = len(min_moves)
         max_player_mobility = len(max_moves)
         return self.value(min_player_mobility, max_player_mobility)
-    
+
+    def corner_closeness(self, game, state):
+        player_closeness = 0
+        enemy_closeness = 0
+        temp_player = 0
+        temp_enemy = 0
+        corner = (1,1)
+        first = (1,2)
+        second = (2,1)
+        third = (2,2)
+        temp_player, temp_enemy = self.calc_corner_closeness(game, state, corner, first, second, third)
+        player_closeness += temp_player
+        enemy_closeness += temp_enemy
+        corner = (1,9)
+        first = (1,8)
+        second = (2,9)
+        third = (2,8)
+        temp_player, temp_enemy = self.calc_corner_closeness(game, state, corner, first, second, third)
+        player_closeness += temp_player
+        enemy_closeness += temp_enemy
+        corner = (9,1)
+        first = (9,2)
+        second = (8,1)
+        third = (8,2)
+        temp_player, temp_enemy = self.calc_corner_closeness(game, state, corner, first, second, third)
+        player_closeness += temp_player
+        enemy_closeness += temp_enemy
+        corner = (9,9)
+        first = (9,8)
+        second = (8,9)
+        third = (8,8)
+        temp_player, temp_enemy = self.calc_corner_closeness(game, state, corner, first, second, third)
+        player_closeness += temp_player
+        enemy_closeness += temp_enemy
+        return -12.5 * (player_closeness - enemy_closeness);
+
+    def calc_corner_closeness(self, game, state, corner, first, second, third):
+        enemy = opponent(self.player)
+        player_closeness = 0
+        enemy_closeness = 0
+        if (state["board"][game.to_grid(corner)]) == ' ':
+            if (state["board"][game.to_grid(first)]) == self.player: player_closeness += 1
+            elif (state["board"][game.to_grid(first)]) == enemy: enemy_closeness += 1
+            if(state["board"][game.to_grid(second)]) == self.player: player_closeness += 1
+            elif (state["board"][game.to_grid(second)]) == enemy: enemy_closeness += 1
+            if(state["board"][game.to_grid(third)]) == self.player: player_closeness += 1
+            elif (state["board"][game.to_grid(third)]) == enemy: enemy_closeness += 1
+        return player_closeness, enemy_closeness
 
     def heuristics(self, game, state, max_moves, min_moves):
         """ Returns number of marks for the agent
@@ -310,7 +357,8 @@ class AlphaBetaAgent(Agent):
         h_corners = self.corners(game, state, max_moves, min_moves) 
         h_mobility = self.mobility(game, state, max_moves, min_moves) 
         h_coins = self.coin_parity(game, state) 
-        return h_corners * 800 + h_mobility * 80 + h_coins * 8
+        h_closeness = self.corner_closeness(game, state)
+        return h_corners * 800 + h_closeness * 400 + h_mobility * 80 + h_coins * 8
 
     def prepare_ranking(self, ranking):
         #Used to rank moves for better alpha beta pruning
