@@ -67,7 +67,6 @@ class MinMaxAgent(Agent):
         # then we can recursively descend search the tree and
         # propagate min-max values upwards so that we finally
         # can select the best move.
-        
         self.player = state["player"]
         self.turn_timer = time.time() + timeout
         moves = game.legal_moves(state);
@@ -139,7 +138,8 @@ class AlphaBetaAgent(Agent):
         v = -100000
         a = -100000
         b = 100000
-
+        ranking = dict()
+        self.prepare_ranking(ranking)
         self.player = state["player"]
         self.turn_time = time.time() + timeout
         moves = game.legal_moves(state);
@@ -149,11 +149,17 @@ class AlphaBetaAgent(Agent):
             depth = 5
             best_value = -100000
             best_move = None
+            ranked_moves = list()
             for move in moves:
+                tup = (ranking[move],move)
+                ranked_moves.append(tup)
+            ranked_moves.sort(key=lambda tup: tup[0])
+            for tup in ranked_moves:
+                move = tup[1]
                 if time.time() >= self.turn_time:
                     break
                 temp_state = game.make_move(state, move)
-                value = self.min_val(game, temp_state, depth, a, b)
+                value = self.min_val(game, temp_state, depth, a, b, ranking)
                 if(value > best_value):
                     best_value = value
                     best_move = move
@@ -162,7 +168,7 @@ class AlphaBetaAgent(Agent):
             return best_move
         
 
-    def max_val(self, game, state, depth, a, b):
+    def max_val(self, game, state, depth, a, b, ranking):
         if depth == 0:
             max_moves, min_moves = self.legal_moves(game, state, self.player)
             return self.heuristics(game, state, max_moves, min_moves)
@@ -174,11 +180,17 @@ class AlphaBetaAgent(Agent):
             else:
                 depth -= 1
                 best_value = -100000
+                ranked_moves = list()
                 for move in moves:
+                    tup = (ranking[move],move)
+                    ranked_moves.append(tup)
+                ranked_moves.sort(key=lambda tup: tup[0])
+                for tup in ranked_moves:
+                    move = tup[1]
                     if time.time() >= self.turn_time:
                         break
                     temp_state = game.make_move(state, move)
-                    value = self.min_val(game, temp_state, depth, a, b)
+                    value = self.min_val(game, temp_state, depth, a, b, ranking)
                     if(value > best_value):
                         best_value = value
                     if(best_value >= b):
@@ -188,7 +200,7 @@ class AlphaBetaAgent(Agent):
                 return best_value
 
 
-    def min_val(self, game, state, depth, a, b):
+    def min_val(self, game, state, depth, a, b, ranking):
         if depth == 0:
             max_moves, min_moves = self.legal_moves(game, state, self.player)
             return self.heuristics(game, state, max_moves, min_moves)
@@ -200,11 +212,17 @@ class AlphaBetaAgent(Agent):
             else:
                 depth -= 1
                 best_value = 100000
+                ranked_moves = list()
                 for move in moves:
+                    tup = (ranking[move],move)
+                    ranked_moves.append(tup)
+                ranked_moves.sort(key=lambda tup: tup[0])
+                for tup in ranked_moves:
+                    move = tup[1]
                     if time.time() >= self.turn_time:
                         break
                     temp_state = game.make_move(state, move)
-                    value = self.max_val(game, temp_state, depth, a, b)
+                    value = self.max_val(game, temp_state, depth, a, b, ranking)
                     if(value < best_value):
                         best_value = value
                     if(best_value >= a):
@@ -293,3 +311,70 @@ class AlphaBetaAgent(Agent):
         h_mobility = self.mobility(game, state, max_moves, min_moves) 
         h_coins = self.coin_parity(game, state) 
         return h_corners * 800 + h_mobility * 80 + h_coins * 8
+
+    def prepare_ranking(self, ranking):
+        #Used to rank moves for better alpha beta pruning
+        ranking[(1,1)] = 4
+        ranking[(1,2)] = -3
+        ranking[(1,3)] = 2
+        ranking[(1,4)] = 2
+        ranking[(1,5)] = 2
+        ranking[(1,6)] = 2
+        ranking[(1,7)] = -3
+        ranking[(1,8)] = 4
+        ranking[(2,1)] = -3
+        ranking[(2,2)] = -4
+        ranking[(2,3)] = -1
+        ranking[(2,4)] = -1
+        ranking[(2,5)] = -1
+        ranking[(2,6)] = -1
+        ranking[(2,7)] = -4
+        ranking[(2,8)] = -3
+        ranking[(3,1)] = 2
+        ranking[(3,2)] = -1
+        ranking[(3,3)] = 1
+        ranking[(3,4)] = 0
+        ranking[(3,5)] = 0
+        ranking[(3,6)] = 1
+        ranking[(3,7)] = -1
+        ranking[(3,8)] = 2
+        ranking[(4,1)] = 2
+        ranking[(4,2)] = -1
+        ranking[(4,3)] = 0
+        ranking[(4,4)] = 1
+        ranking[(4,5)] = 1
+        ranking[(4,6)] = 0
+        ranking[(4,7)] = -1
+        ranking[(4,8)] = 2
+        ranking[(5,1)] = 2
+        ranking[(5,2)] = -1
+        ranking[(5,3)] = 0
+        ranking[(5,4)] = 1
+        ranking[(5,5)] = 1
+        ranking[(5,6)] = 0
+        ranking[(5,7)] = -1
+        ranking[(5,8)] = 2
+        ranking[(6,1)] = 2
+        ranking[(6,2)] = -1
+        ranking[(6,3)] = 1
+        ranking[(6,4)] = 0
+        ranking[(6,5)] = 0
+        ranking[(6,6)] = 1
+        ranking[(6,7)] = -1
+        ranking[(6,8)] = 2
+        ranking[(7,1)] = -3
+        ranking[(7,2)] = -4
+        ranking[(7,3)] = -1
+        ranking[(7,4)] = -1
+        ranking[(7,5)] = -1
+        ranking[(7,6)] = -1
+        ranking[(7,7)] = -4
+        ranking[(7,8)] = -3
+        ranking[(8,1)] = 4
+        ranking[(8,2)] = -3
+        ranking[(8,3)] = 2
+        ranking[(8,4)] = 2
+        ranking[(8,5)] = 2
+        ranking[(8,6)] = 2
+        ranking[(8,7)] = -3
+        ranking[(8,8)] = 4

@@ -164,6 +164,7 @@ class Reversi:
 
         for y in range(1, self.h+1):
             print_row(y)
+            #On some computers prining is optimized away, this row forced the print
             sys.stdout.flush()
 
     
