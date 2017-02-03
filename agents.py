@@ -48,7 +48,7 @@ class InteractiveAgent(Agent):
             #On some computers prining is optimized away, this row forced the print
             stdout.flush()
              # first char is row and is a number
-            if (action == 'pass'):
+            if (action == "pass"):
                 return action
             row = int(action[0])
             col = index(ascii_lowercase, action[1].lower()) + 1
