@@ -1,7 +1,7 @@
 import random
 import time
 from string import ascii_lowercase, index
-from sys import version_info
+from sys import version_info, stdout
 from reversi import BLACK, WHITE
 
 def opponent(player):
@@ -45,7 +45,11 @@ class InteractiveAgent(Agent):
         """
         while True:
             action = read_some_input('What is your move? \n')
+            #On some computers prining is optimized away, this row forced the print
+            stdout.flush()
              # first char is row and is a number
+            if (action == 'pass'):
+                return action
             row = int(action[0])
             col = index(ascii_lowercase, action[1].lower()) + 1
             move = (col,row)
@@ -53,6 +57,7 @@ class InteractiveAgent(Agent):
                 return move
             else:
                 print('{} is not a legal move!'.format(move))
+                stdout.flush()
 
 class MinMaxAgent(Agent):
     """ A min-max searching agent.
