@@ -148,15 +148,19 @@ class AlphaBetaAgent(Agent):
             return "pass"
         else:
             depth = 5
-            values = dict()
-            for move in moves:
-                if time.time() >= self.turn_time:
-                    break
-
-                temp_state = game.make_move(state, move)
-                value = self.min_val(game, temp_state, depth, a, b)
-                values[move] = value
-            return max(values, key=values.get)
+            best_value = -100000
+                for move in moves:
+                    if time.time() >= self.turn_time:
+                        break
+                    temp_state = game.make_move(state, move)
+                    value = self.min_val(game, temp_state, depth, a, b)
+                    if(value > best_value):
+                        best_value = value
+                    if(best_value >= b):
+                        return best_value
+                    if(best_value > a):
+                        a = best_value
+                return best_value
         
 
     def max_val(self, game, state, depth, a, b):
