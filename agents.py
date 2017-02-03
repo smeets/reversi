@@ -11,9 +11,19 @@ py3 = version_info[0] > 2
 
 def read_some_input(txt):
     if py3:
-        return input(txt)
+        self_input = input(txt)
+        # first char is row and is a number, second is a letter a-something
+        row = int(self_input[0])
+        col = ascii_lowercase.index(self_input[1].lower()) + 1
+        move = (col,row)
+        return move
     else:
-        return raw_input(txt)
+        self_input = raw_input(txt)
+        # first char is row and is a number, second is a letter a-something
+        row = int(self_input[0])
+        col = index(ascii_lowercase, self_input[1].lower()) + 1
+        move = (col,row)
+        return move
 
 class Agent:
 
@@ -44,12 +54,7 @@ class InteractiveAgent(Agent):
         """ Read 5d and convert to (5,4)
         """
         while True:
-            action = read_some_input('What is your move? ')
-            # first char is row and is a number
-            row = int(action[0])
-            col = index(ascii_lowercase, action[1].lower()) + 1
-            move = (col,row)
-
+            move = read_some_input('What is your move? ')
             if game.is_legal_move(state, move):
                 return move
             else:
