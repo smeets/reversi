@@ -151,14 +151,14 @@ class AlphaBetaAgent(Agent):
         if not moves:
             return "pass"
         else:
-            depth = 5
+            depth = 4
             best_value = -100000
             best_move = None
             ranked_moves = list()
             for move in moves:
                 tup = (ranking[move],move)
                 ranked_moves.append(tup)
-            ranked_moves.sort(key=lambda tup: tup[0])
+            ranked_moves.sort(key=lambda tup: tup[0], reverse=True)
             for tup in ranked_moves:
                 move = tup[1]
                 if time.time() >= self.turn_time:
@@ -189,7 +189,7 @@ class AlphaBetaAgent(Agent):
                 for move in moves:
                     tup = (ranking[move],move)
                     ranked_moves.append(tup)
-                ranked_moves.sort(key=lambda tup: tup[0])
+                ranked_moves.sort(key=lambda tup: tup[0], reverse=True)
                 for tup in ranked_moves:
                     move = tup[1]
                     if time.time() >= self.turn_time:
@@ -221,7 +221,7 @@ class AlphaBetaAgent(Agent):
                 for move in moves:
                     tup = (ranking[move],move)
                     ranked_moves.append(tup)
-                ranked_moves.sort(key=lambda tup: tup[0])
+                ranked_moves.sort(key=lambda tup: tup[0], reverse=True)
                 for tup in ranked_moves:
                     move = tup[1]
                     if time.time() >= self.turn_time:
@@ -341,7 +341,7 @@ class AlphaBetaAgent(Agent):
         temp_player, temp_enemy = self.calc_corner_closeness(game, state, corner, first, second, third)
         player_closeness += temp_player
         enemy_closeness += temp_enemy
-        return -12.5 * (player_closeness - enemy_closeness);
+        return 12.5 * (player_closeness - enemy_closeness);
 
     def calc_corner_closeness(self, game, state, corner, first, second, third):
         enemy = opponent(self.player)

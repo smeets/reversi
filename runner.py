@@ -5,7 +5,7 @@ import cProfile
 from reversi import Reversi, move_repr, BLACK, WHITE
 from agents import *
 
-timeout = 10
+timeout = 60
 
 parser = argparse.ArgumentParser(description="Play some Reversi.")
 parser.add_argument("--verbose", help="output some helpful info", action="store_true")
