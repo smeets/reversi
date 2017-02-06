@@ -59,6 +59,9 @@ class InteractiveAgent(Agent):
 class MinMaxAgent(Agent):
     """ A min-max searching agent.
     """
+    def __init__(self, depth):
+        self.depth = depth
+
     def next_move(self, game, state, timeout):
         # Idea is to go search in tree successors(state)
         # and select move that leads to best outcome.
@@ -68,14 +71,13 @@ class MinMaxAgent(Agent):
         if not moves:
             return "pass"
         else:
-            depth = 6
             values = dict()
             for move in moves:
                 if time.time() >= self.turn_timer:
                     break
 
                 temp_state = game.make_move(state, move)
-                value = self.min_val(game, temp_state, depth)
+                value = self.min_val(game, temp_state, self.depth)
                 values[move] = value
             return max(values, key=values.get)
 
@@ -125,6 +127,9 @@ class MinMaxAgent(Agent):
 
 class AlphaBetaAgent(Agent):
 
+    def __init__(self, depth):
+        self.depth = depth
+
     def next_move(self, game, state, timeout):
         # Very similar to minmax but do some magic with
         # inequalities so that we can prune states that
@@ -141,7 +146,6 @@ class AlphaBetaAgent(Agent):
         if not moves:
             return "pass"
         else:
-            depth = 6
             best_value = -100000
             best_move = None
             ranked_moves = list()
@@ -154,7 +158,7 @@ class AlphaBetaAgent(Agent):
                 if time.time() >= self.turn_time:
                     break
                 temp_state = game.make_move(state, move)
-                value = self.min_val(game, temp_state, depth, a, b, ranking)
+                value = self.min_val(game, temp_state, self.depth, a, b, ranking)
                 if(value > best_value):
                     best_value = value
                     best_move = move
