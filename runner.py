@@ -10,7 +10,7 @@ parser.add_argument("--verbose", help="output some helpful info", action="store_
 parser.add_argument("--timeout", help="set the ai max turn time in seconds", action="store", type=int, dest="timeout", default=60)
 parser.add_argument("--blind", help="silence board printing", action="store_true")
 parser.add_argument("--profile", help="you know what is up", action="store_true")
-parser.add_argument("--depth", help="set the ai max turn time in seconds", action="store", type=int, dest="timeout", default=4)
+parser.add_argument("--depth", help="set the ai max turn time in seconds", action="store", type=int, dest="depth", default=4)
 parser.add_argument("--moves", help="print moves in YX format starting with player1", action="store_true")
 parser.add_argument("--player1", choices=['rng', 'minmax', 'alphabeta', 'self'], help="specify player 1's agent")
 parser.add_argument("--player2", choices=['rng', 'minmax', 'alphabeta', 'self'], help="specify player 2's agent")
