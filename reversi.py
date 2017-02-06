@@ -136,7 +136,6 @@ class Reversi:
         """
         return not self.legal_moves(state)
 
-
     def top_scoring_player(self, state):
         black = self.score_player(state, BLACK)
         white = self.score_player(state, WHITE)
@@ -169,11 +168,8 @@ class Reversi:
 
 
     def score_player(self, state, player):
-        """ Score(Player) = Sum(Markers for Player)
+        """ Score(Player) = Count(Markers for Player)
         """
-        score = 0
-        for x in state["board"]:
-            if x == player:
-                score += 1
-        return score
+        coins = [x for x in state["board"] if x == player]
+        return len(coins)
 
