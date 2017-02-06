@@ -16,8 +16,8 @@ def move_repr(move):
     repr += ascii_lowercase[x-1]
     return repr
 
-def opponent(state):
-    return BLACK if state["player"] == WHITE else WHITE
+def opponent(player):
+    return BLACK if player == WHITE else WHITE
 
 def mark_line(board, player, src, dir, end):
     """ Change ownership of markers from src to end.
@@ -32,17 +32,19 @@ def raycast(state, src, dir):
         if current player has a mark with
         at least one enemy in between.
     """
+    player = state["player"]
     board = state["board"]
+    enemy = opponent(player)
     loc = src + dir
 
     # Fail if surrounded by self
-    if board[loc] == state["player"]:
+    if board[loc] == player:
         return None
 
-    while board[loc] == opponent(state):
+    while board[loc] == enemy:
         loc += dir
 
-    return loc if board[loc] == state["player"] else None
+    return loc if board[loc] == player else None
 
 class Reversi:
 
@@ -83,8 +85,7 @@ class Reversi:
     def to_grid(self, move):
         """ Convert from (1, 1) to grid[0]
         """
-        x,y = move
-        return self.map_2d(x, y)
+        return self.map_2d(*move)
 
     def is_legal_move(self, state, move):
         """ Move is legal if player has marker in any
@@ -124,10 +125,9 @@ class Reversi:
                 if end:
                     mark_line(board, player, point, dir, end)
 
-
         return {
             "turn": state["turn"] + 1,
-            "player": opponent(state),
+            "player": opponent(state["player"]),
             "board": board
         }
 
@@ -167,10 +167,13 @@ class Reversi:
             #On some computers prining is optimized away, this row forced the print
             stdout.flush()
 
-    
+
     def score_player(self, state, player):
         """ Score(Player) = Sum(Markers for Player)
         """
-        own = lambda mark: mark == player
-        return len(list(filter(own, state["board"])))
-    
+        score = 0
+        for x in state["board"]:
+            if x == player:
+                score += 1
+        return score
+

@@ -2,10 +2,7 @@ import random
 import time
 from string import ascii_lowercase, index
 from sys import version_info, stdout
-from reversi import BLACK, WHITE
-
-def opponent(player):
-    return BLACK if player == WHITE else BLACK
+from reversi import BLACK, WHITE, opponent
 
 py3 = version_info[0] > 2
 
@@ -65,20 +62,13 @@ class MinMaxAgent(Agent):
     def next_move(self, game, state, timeout):
         # Idea is to go search in tree successors(state)
         # and select move that leads to best outcome.
-        #
-        # E.g.: argmax(search(successors(state)))
-        #
-        # successors(state) should be a list of (move, state)
-        # then we can recursively descend search the tree and
-        # propagate min-max values upwards so that we finally
-        # can select the best move.
         self.player = state["player"]
         self.turn_timer = time.time() + timeout
         moves = game.legal_moves(state);
         if not moves:
             return "pass"
         else:
-            depth = 4
+            depth = 6
             values = dict()
             for move in moves:
                 if time.time() >= self.turn_timer:
@@ -88,7 +78,7 @@ class MinMaxAgent(Agent):
                 value = self.min_val(game, temp_state, depth)
                 values[move] = value
             return max(values, key=values.get)
-        
+
 
     def max_val(self, game, state, depth):
         if depth == 0:
@@ -151,7 +141,7 @@ class AlphaBetaAgent(Agent):
         if not moves:
             return "pass"
         else:
-            depth = 4
+            depth = 6
             best_value = -100000
             best_move = None
             ranked_moves = list()
@@ -171,7 +161,7 @@ class AlphaBetaAgent(Agent):
                 if(best_value > a):
                     a = best_value
             return best_move
-        
+
 
     def max_val(self, game, state, depth, a, b, ranking):
         if depth == 0:
@@ -210,7 +200,7 @@ class AlphaBetaAgent(Agent):
             max_moves, min_moves = self.legal_moves(game, state, self.player)
             return self.heuristics(game, state, max_moves, min_moves)
         else:
-            moves = game.legal_moves(state);
+            moves = game.legal_moves(state)
             if not moves:
                 max_moves, min_moves = self.legal_moves(game, state, self.player)
                 return self.heuristics(game, state, max_moves, min_moves)
@@ -265,13 +255,13 @@ class AlphaBetaAgent(Agent):
 #                    if hit == enemy:
 #                        # Enemy found, we are now potentially flanked
 #                        back = state["board"][point - dir]
-#             
+#
 #
 #                if owner == self.player:
 #                    max_player_stability += coin_stability
 #                else:
 #                    min_player_stability += coin_stability
-    
+
     def corners(self, game, state, max_moves, min_moves):
         """ Corner occupancy and closeness """
         top_left = (1, 1)
@@ -300,7 +290,7 @@ class AlphaBetaAgent(Agent):
         max_player_corner += sum(list(map(min_next_turn, corners)))
 
         return self.value(min_player_corner, max_player_corner)
-        
+
 
     def mobility(self, game, state, max_moves, min_moves):
         """ Actual mobility """
@@ -359,9 +349,9 @@ class AlphaBetaAgent(Agent):
     def heuristics(self, game, state, max_moves, min_moves):
         """ Returns number of marks for the agent
         """
-        h_corners = self.corners(game, state, max_moves, min_moves) 
-        h_mobility = self.mobility(game, state, max_moves, min_moves) 
-        h_coins = self.coin_parity(game, state) 
+        h_corners = self.corners(game, state, max_moves, min_moves)
+        h_mobility = self.mobility(game, state, max_moves, min_moves)
+        h_coins = self.coin_parity(game, state)
         h_closeness = self.corner_closeness(game, state)
         return h_corners * 800 + h_closeness * 400 + h_mobility * 80 + h_coins * 8
 
